@@ -75,21 +75,13 @@ fun PerformanceChart(modifier: Modifier = Modifier, list: List<Float>) {
             val toValuePercentage = getRelativeValue(pair.second, max, min)
 
             Canvas(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(1f)
+                modifier = Modifier.fillMaxHeight().weight(1f)
                     .border(width = 1.dp, color = Color.White.copy(alpha = 0.3f)),
                 onDraw = {
                     val fromPoint = Offset(x = 0f, y = size.height.times(1 - fromValuePercentage)) // <-- Use times so it works for any available space
-                    val toPoint =
-                        Offset(x = size.width, y = size.height.times((1 - toValuePercentage))) // <-- Also here!
+                    val toPoint = Offset(x = size.width, y = size.height.times((1 - toValuePercentage))) // <-- Also here!
 
-                    drawLine(
-                        color = lineColor,
-                        start = fromPoint,
-                        end = toPoint,
-                        strokeWidth = 3f
-                    )
+                    drawLine(color = lineColor, start = fromPoint, end = toPoint, strokeWidth = 3f)
                 })
         }
     }
