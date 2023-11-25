@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <uses-feature
+        android:name="android.hardware.sensor.stepdetector"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -14,8 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FitSync"
         tools:targetApi="31">
+
         <service
             android:name=".StepCounterService"
+            android:foregroundServiceType="health"
             android:enabled="true"
             android:exported="true"></service>
 
