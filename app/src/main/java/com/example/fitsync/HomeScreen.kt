@@ -86,8 +86,7 @@ fun HomeScreen() {
 
 @Composable
 fun ActivityCard(){
-
-    val steps = 991
+    val steps by StepCounterRepository.stepsFlow.collectAsState()
     val goal = 1200
     val distance = 0.69f
     val calories = 24
