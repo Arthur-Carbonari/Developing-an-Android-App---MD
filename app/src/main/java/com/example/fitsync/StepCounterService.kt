@@ -41,7 +41,6 @@ class StepCounterService : Service(), SensorEventListener {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        Log.d("StepCounterService", "Service is running")
         createNotificationChannel()
         val notification = createNotification()
         startForeground(NOTIFICATION_ID, notification)
@@ -50,8 +49,6 @@ class StepCounterService : Service(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        Log.d("StepCounterService", "Sensor changed here")
-
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
             // Increment the step count for each step detected
             totalSteps++
@@ -87,7 +84,6 @@ class StepCounterService : Service(), SensorEventListener {
     }
 
     override fun onDestroy() {
-        Log.d("StepCounterService", "Service is being destroyed")
         super.onDestroy()
         sensorManager.unregisterListener(this)
     }
