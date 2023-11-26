@@ -50,9 +50,9 @@ class StepCounterService : Service(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
-            // Increment the step count for each step detected
+            // Increment the step count for each step detected and update the repository
             totalSteps++
-            Log.d("StepCounterService", "Total Steps: $totalSteps")
+            StepCounterRepository.updateSteps(totalSteps)
         }
     }
 
@@ -78,8 +78,9 @@ class StepCounterService : Service(), SensorEventListener {
         return Notification.Builder(this, CHANNEL_ID)
             .setContentTitle("Step Counter Running")
             .setContentText("Counting your steps...")
-            .setSmallIcon(R.drawable.ic_launcher_foreground) // Replace with your own icon
+            .setSmallIcon(R.drawable.footsteps)
             .setContentIntent(pendingIntent)
+            .setOnlyAlertOnce(true)
             .build()
     }
 
