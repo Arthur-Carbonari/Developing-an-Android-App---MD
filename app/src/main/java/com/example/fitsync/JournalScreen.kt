@@ -29,6 +29,10 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+/**
+ * Composable function for displaying the Journal screen.
+ * It shows a performance chart based on the user's past week's step counts and other relevant data.
+ */
 @Composable
 fun JournalScreen() {
     val pastWeek = listOf(2000f, 1200f, 900f, 1100f, 2200f, 2100f, 1900f)
@@ -67,6 +71,10 @@ fun JournalScreen() {
 
 }
 
+/**
+ * Composable function for rendering a circular progress indicator (arc).
+ * @param modifier Modifier passed to customize layout or appearance.
+ */
 @Composable
 private fun ArcComposable(modifier: Modifier) {
     Box(
@@ -92,6 +100,12 @@ private fun ArcComposable(modifier: Modifier) {
     }
 }
 
+/**
+ * Composable function for drawing a performance chart.
+ * The chart displays a graphical representation of step counts or other metrics over time.
+ * @param modifier Modifier passed to customize layout or appearance.
+ * @param list A list of Float values representing the data points to be plotted on the chart.
+ */
 @Composable
 fun PerformanceChart(modifier: Modifier = Modifier, list: List<Float>) {
     val zipList: List<Pair<Float, Float>> = list.zipWithNext()
@@ -120,5 +134,13 @@ fun PerformanceChart(modifier: Modifier = Modifier, list: List<Float>) {
     }
 }
 
+/**
+ * Calculates the relative value of a data point in the range between the maximum and minimum values.
+ * This is used for plotting the data points on the performance chart.
+ * @param value The data point value to be normalized.
+ * @param max The maximum value in the data set.
+ * @param min The minimum value in the data set.
+ * @return The relative value (normalized) of the data point.
+ */
 private fun getRelativeValue(value: Float, max: Float, min: Float) =
     (value - min) / (max - min)

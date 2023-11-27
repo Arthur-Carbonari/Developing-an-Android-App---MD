@@ -33,7 +33,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.tasks.Task
 
-
+/**
+ * Composable function for the main screen of the app.
+ * It sets up the navigation controller and manages navigation to different screens.
+ * @param onSignInClick Lambda function triggered for signing in.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,6 +71,15 @@ fun MainScreen(onSignInClick: () -> Task<Void>) {
     }
 }
 
+
+/**
+ * Data class representing a navigation item in the bottom navigation bar.
+ * It holds the route, title, and icons for the navigation item.
+ * @param route The route associated with the navigation item.
+ * @param title The title of the navigation item.
+ * @param outlinedIcon The icon used when the item is not selected.
+ * @param filledIcon The icon used when the item is selected.
+ */
 data class NavigationItem(
     val route: AppRoutes,
     val title: String,
@@ -74,6 +87,12 @@ data class NavigationItem(
     val filledIcon: ImageVector
 )
 
+
+/**
+ * Composable function for the bottom navigation bar.
+ * It displays navigation items and handles navigation actions.
+ * @param navController The NavController to manage app navigation.
+ */
 @Composable
 fun MyNavigationBar(navController: NavController) {
     val navigationItems = listOf(

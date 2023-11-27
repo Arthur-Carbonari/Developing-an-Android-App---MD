@@ -16,15 +16,21 @@ import android.hardware.SensorManager
 import android.util.Log
 import androidx.annotation.RequiresApi
 
+/**
+ * Service class for counting steps. It listens to the step detector sensor and
+ * updates the step count accordingly.
+ */
 class StepCounterService : Service(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
 
-    override fun onBind(intent: Intent): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent): IBinder? { return null }
 
+    /**
+     * Initializes the service, sets up the step counter repository and sensor manager.
+     * Registers a listener for the step detector sensor if available.
+     */
     override fun onCreate() {
         super.onCreate()
 
@@ -42,6 +48,10 @@ class StepCounterService : Service(), SensorEventListener {
         }
     }
 
+    /**
+     * Handles the start command for the service. Creates a notification channel
+     * and starts the service in the foreground with a notification.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         createNotificationChannel()
@@ -51,6 +61,11 @@ class StepCounterService : Service(), SensorEventListener {
         return START_STICKY
     }
 
+    /**
+     * Called when the step detector sensor reports a new step.
+     * Increments the step count in the repository.
+     * @param event The SensorEvent.
+     */
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
             // Increment the step count
@@ -60,6 +75,9 @@ class StepCounterService : Service(), SensorEventListener {
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
+    /**
+     * Creates a notification channel for displaying foreground service notifications.
+     */
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
@@ -72,6 +90,10 @@ class StepCounterService : Service(), SensorEventListener {
         }
     }
 
+    /**
+     * Creates a notification for the foreground service.
+     * @return The created Notification instance.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotification(): Notification {
         val notificationIntent = Intent(this, MainActivity::class.java)

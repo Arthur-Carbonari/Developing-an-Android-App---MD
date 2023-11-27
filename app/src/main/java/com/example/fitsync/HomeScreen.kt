@@ -28,6 +28,10 @@ import java.time.DayOfWeek
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 
+/**
+ * Composable function for the Home screen of the app.
+ * It displays a summary of the user's activities, the current date, and interactive cards for different features.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen() {
@@ -84,6 +88,10 @@ fun HomeScreen() {
     }
 }
 
+/**
+ * Composable function that displays an activity card.
+ * The card shows the user's current step count, distance covered, and calories burned.
+ */
 @Composable
 fun ActivityCard(){
     val steps by StepCounterRepository.stepsFlow.collectAsState()
@@ -125,6 +133,12 @@ fun ActivityCard(){
     }
 }
 
+/**
+ * Composable function to display a daily recap card for a specific day of the week.
+ * It visualizes the user's activity progress for that day.
+ * @param progress The activity progress for the day, represented as a float value.
+ * @param dayOfWeek The day of the week for which the recap is displayed.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun DailyRecap(progress: Float, dayOfWeek: DayOfWeek){
@@ -142,11 +156,21 @@ fun DailyRecap(progress: Float, dayOfWeek: DayOfWeek){
     }
 }
 
+/**
+ * Data class representing the statistics for a single day.
+ * Used to hold and pass around the day's activity progress and the associated day of the week.
+ * @param dayOfWeek The day of the week.
+ * @param progress The activity progress for the day, represented as a float value.
+ */
 data class DayStats(
     val dayOfWeek: DayOfWeek,
     val progress: Float,
 )
 
+/**
+ * Composable function that displays a horizontal row of daily recap cards.
+ * Each card represents the user's activity progress for a specific day of the week.
+ */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeekRecap() {
@@ -167,6 +191,10 @@ fun WeekRecap() {
     }
 }
 
+/**
+ * Composable function for displaying a daily challenge card.
+ * The card motivates the user with a daily step goal and offers a button to start the challenge.
+ */
 @Composable
 fun DailyChallengeCard() {
     Card(
@@ -199,6 +227,13 @@ fun DailyChallengeCard() {
     }
 }
 
+/**
+ * Custom composable function for displaying a circular progress indicator.
+ * It shows the user's progress towards a goal in a circular format and displays the percentage value.
+ * @param progress The current progress towards the goal, represented as a float value.
+ * @param modifier Modifier for customizing the layout and appearance.
+ * @param strokeWidth The stroke width for the circular progress bar.
+ */
 @Composable
 fun CustomCircularProgressIndicator(
     progress: Float,

@@ -37,6 +37,10 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.google.firebase.auth.FirebaseAuth
 
+/**
+ * Composable function for displaying the Profile screen.
+ * It shows the user's profile picture, name, and other profile options.
+ */
 @Composable
 fun ProfileScreen() {
     val user = FirebaseAuth.getInstance().currentUser
@@ -117,6 +121,12 @@ fun ProfileScreen() {
     }
 }
 
+/**
+ * Composable function for rendering individual profile option items.
+ * Each item is displayed as a card with an icon and title.
+ * @param title The title of the profile option.
+ * @param icon The icon representing the profile option.
+ */
 @Composable
 fun ProfileOptionItem(title: String, icon: ImageVector) {
     Card(

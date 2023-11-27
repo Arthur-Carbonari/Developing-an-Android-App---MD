@@ -44,6 +44,10 @@ class MainActivity : ComponentActivity() {
         startStepCounterService()
     }
 
+    /**
+     * Configures Google Sign-In options and initializes the GoogleSignInClient.
+     * It sets up the request for the user's ID token and email.
+     */
     private fun configureGoogleSignIn() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -53,6 +57,12 @@ class MainActivity : ComponentActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
     }
 
+    /**
+     * Starts the Google Sign-In process. It first signs out any existing user
+     * to ensure the sign-in dialog is displayed every time. Then, it initiates
+     * the sign-in intent, allowing the user to choose a Google account to sign in with.
+     * @return Task representing the pending result of the sign-out operation.
+     */
     private fun signIn(): Task<Void> {
         // First, sign out from any existing session
         return googleSignInClient.signOut().addOnCompleteListener {
@@ -62,6 +72,10 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Handles the result from the Google Sign-In activity. If the result is successful,
+     * it retrieves the signed-in account and proceeds to authenticate with Firebase.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -76,6 +90,11 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Authenticates the user with Firebase using the ID token from Google Sign-In.
+     * On successful authentication, it updates the UI with the signed-in user's information.
+     * @param idToken The ID token from Google Sign-In used for authenticating with Firebase.
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -88,6 +107,10 @@ class MainActivity : ComponentActivity() {
             }
     }
 
+    /**
+     * Starts the StepCounterService. If the OS version is Oreo or above,
+     * it starts the service as a foreground service; otherwise, it starts it as a background service.
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun startStepCounterService() {
         val serviceIntent = Intent(this, StepCounterService::class.java)

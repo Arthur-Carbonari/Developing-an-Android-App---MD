@@ -27,6 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.google.android.gms.tasks.Task
 
+/**
+ * Composable function for the registration screen.
+ * It allows the user to enter personal information and register in the app.
+ * @param navController NavController for navigating between screens.
+ * @param onSignInClick Lambda function triggered for signing in with Google.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationScreen(navController: NavController, onSignInClick: () -> Task<Void>) {
@@ -108,6 +114,15 @@ fun RegistrationScreen(navController: NavController, onSignInClick: () -> Task<V
 
 }
 
+/**
+ * Function to handle user registration.
+ * It logs the user's input and navigates to the home screen of the app.
+ * @param name The name entered by the user.
+ * @param height The height of the user in centimeters.
+ * @param weight The weight of the user in kilograms.
+ * @param stepsGoal The daily step goal set by the user.
+ * @param navController NavController for navigating between screens.
+ */
 private fun registerUser(
     name: String,
     height: String,
