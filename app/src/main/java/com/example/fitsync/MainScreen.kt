@@ -36,7 +36,7 @@ import androidx.navigation.compose.rememberNavController
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen() {
+fun MainScreen(onSignInClick: () -> Unit) {
     val navController = rememberNavController()
     var showBottomBar by remember { mutableStateOf(false) }
 
@@ -49,7 +49,7 @@ fun MainScreen() {
                 .padding(innerPadding),
         ) {
             NavHost(navController, startDestination = AppRoutes.REGISTRATION.name) {
-                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController) }
+                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
                 composable(AppRoutes.HOME.name) { HomeScreen() }
                 composable(AppRoutes.JOURNAL.name) { JournalScreen() }
                 composable(AppRoutes.PROFILE.name) { ProfileScreen() }

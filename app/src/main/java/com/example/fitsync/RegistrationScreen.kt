@@ -28,7 +28,7 @@ import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavController) {
+fun RegistrationScreen(navController: NavController, onSignInClick: () -> Unit) {
 
     //For now  this is always the first screen the user sees, later it will only show up if the
     //the user is not logged in
@@ -90,7 +90,10 @@ fun RegistrationScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
-                    onClick = {registerUser(name, height, weight, stepsGoal, navController)}
+                    onClick = {
+                        onSignInClick()
+                        registerUser(name, height, weight, stepsGoal, navController)
+                    }
                 ) {
                     Text("Register", Modifier.padding(2.dp), style = MaterialTheme.typography.titleLarge)
 
