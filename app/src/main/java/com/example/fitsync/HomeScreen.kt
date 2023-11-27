@@ -87,9 +87,12 @@ fun HomeScreen() {
 @Composable
 fun ActivityCard(){
     val steps by StepCounterRepository.stepsFlow.collectAsState()
+
     val goal = 1200
-    val distance = 0.69f
-    val calories = 24
+    val averageStepLengthMeters = 175 * 0.415 / 100
+
+    val distance = steps * averageStepLengthMeters / 1000 // Convert to kilometers
+    val calories = steps * 0.04 // 0.04 kcal per step
 
     // Activity Summary Section
     Card(
@@ -109,8 +112,8 @@ fun ActivityCard(){
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text("$steps/$goal Steps", style = MaterialTheme.typography.bodyLarge)
-                Text("${distance}KM Distance", style = MaterialTheme.typography.bodyLarge)
-                Text("$calories", style = MaterialTheme.typography.bodyLarge)
+                Text("${String.format("%.2f", distance)} Km Distance", style = MaterialTheme.typography.bodyLarge)
+                Text("$calories Kcal", style = MaterialTheme.typography.bodyLarge)
             }
 
             CustomCircularProgressIndicator(
@@ -203,6 +206,8 @@ fun CustomCircularProgressIndicator(
     strokeWidth: Dp = 7.dp
 ) {
 
+    val result = (progress * 100).toInt().coerceAtMost(100)
+
     Column(modifier, Arrangement.Center, Alignment.CenterHorizontally) {
         CircularProgressIndicator(
             modifier = Modifier.size(100.dp),
@@ -212,7 +217,7 @@ fun CustomCircularProgressIndicator(
         )
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = "  ${(progress * 100).toInt()}%",
+            text = "  $result%",
             Modifier.fillMaxWidth(),
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge
