@@ -13,26 +13,28 @@ object StepCounterRepository {
     val stepsFlow: StateFlow<Int> = _stepsFlow.asStateFlow()
 
     private lateinit var sharedPreferences: SharedPreferences
+    private var currentDay = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE)
 
         val stepsCurrentDay = sharedPreferences.getString("currentDay", "")
-        val actualCurrentDay = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
-        if (stepsCurrentDay != actualCurrentDay) {
-            _stepsFlow.value = 0
-            sharedPreferences.edit()
-                .putInt("steps", 0)
-                .putString("currentDay", actualCurrentDay)
-                .apply()
-        } else {
-            _stepsFlow.value = sharedPreferences.getInt("steps", 0)
-        }
+        if (stepsCurrentDay != currentDay) startCurrentDay()
+        else _stepsFlow.value = sharedPreferences.getInt("steps", 0)
+
     }
 
     fun updateSteps(steps: Int) {
         _stepsFlow.value = steps
         sharedPreferences.edit().putInt("steps", steps).apply()
+    }
+
+    private fun startCurrentDay() {
+        _stepsFlow.value = 0
+        sharedPreferences.edit()
+            .putInt("steps", 0)
+            .putString("currentDay", currentDay)
+            .apply()
     }
 }
