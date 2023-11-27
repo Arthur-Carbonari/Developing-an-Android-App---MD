@@ -26,8 +26,23 @@ object StepCounterRepository {
     }
 
     fun incrementSteps() {
+        // this is run every 50 steps
+        if(_stepsFlow.value % 50 == 0) {
+            // first we check if the current day is correct
+            val actualCurrentDay = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+            if (actualCurrentDay != currentDay){
+                // if it is not we start the current day
+                currentDay = actualCurrentDay
+                startCurrentDay()
+            }
+            // every 50 steps we increment the steps normally and then save the amount to shared preference
+            _stepsFlow.value++
+            sharedPreferences.edit().putInt("steps", _stepsFlow.value).apply()
+            return
+        }
+
+        // normally we just increment the step count
         _stepsFlow.value++
-        sharedPreferences.edit().putInt("steps", _stepsFlow.value).apply()
     }
 
     private fun startCurrentDay() {
