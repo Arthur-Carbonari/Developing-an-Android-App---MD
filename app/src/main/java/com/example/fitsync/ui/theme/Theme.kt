@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFFF44336),         // Blue Grey-ish
+    primary = Color(0xFF03A9F4),         // Blue Grey-ish
     onPrimary = Color(0xFF000000),       // Black for text/icons on primary color
     primaryContainer = Color(0xFF121212),// Very dark grey, almost black
     secondary = Color(0xFF80CBC4),       // Soft Green/Teal
