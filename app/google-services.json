@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "185244200097",
+    "project_id": "fitsync-4f8a6",
+    "storage_bucket": "fitsync-4f8a6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185244200097:android:500fbfc0ac9387eecf14e0",
+        "android_client_info": {
+          "package_name": "com.example.fitsync"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185244200097-t6top6kkni78v5790ulm23qf1hu8b5fl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fitsync",
+            "certificate_hash": "22efdf8e48c8ab99ff295ed4449b0b74335d4e5b"
+          }
+        },
+        {
+          "client_id": "185244200097-00no6b05kqlmq3d9cdmf643dcelcvvf5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEquxyyksXtc-fz4JYQunSgmGGDa1uC_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185244200097-00no6b05kqlmq3d9cdmf643dcelcvvf5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
