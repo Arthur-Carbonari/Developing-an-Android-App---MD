@@ -28,6 +28,11 @@ class StepCounterService : Service(), SensorEventListener {
 
     override fun onCreate() {
         super.onCreate()
+
+        // initializes step counter and sets the value for total steps
+        StepCounterRepository.init(this)
+        totalSteps = StepCounterRepository.stepsFlow.value
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
