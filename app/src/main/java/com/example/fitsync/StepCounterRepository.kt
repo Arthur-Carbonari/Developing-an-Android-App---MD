@@ -13,8 +13,11 @@ object StepCounterRepository {
     val stepsFlow: StateFlow<Int> = _stepsFlow.asStateFlow()
 
     private lateinit var sharedPreferences: SharedPreferences
+
+    // stores the day the current step count is related to
     private var currentDay = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
+    // Initializes the step count and starts the current day if its not started yet
     fun init(context: Context) {
         sharedPreferences = context.getSharedPreferences("StepCounterPrefs", Context.MODE_PRIVATE)
 
@@ -25,6 +28,7 @@ object StepCounterRepository {
 
     }
 
+    // Increments step count and updates shared preferences
     fun incrementSteps() {
         // this is run every 50 steps
         if(_stepsFlow.value % 50 == 0) {
@@ -45,6 +49,7 @@ object StepCounterRepository {
         _stepsFlow.value++
     }
 
+    // This method will update shared memory currentDay and set the steps to 0
     private fun startCurrentDay() {
         _stepsFlow.value = 0
         sharedPreferences.edit()
