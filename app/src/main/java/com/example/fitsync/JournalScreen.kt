@@ -61,7 +61,7 @@ fun JournalScreen() {
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(text = "there will be other things in here")
-            ArcComposable(Modifier)
+//            ArcComposable(Modifier)
         }
     }
 
@@ -70,8 +70,7 @@ fun JournalScreen() {
 @Composable
 private fun ArcComposable(modifier: Modifier) {
     Box(
-        modifier = modifier
-            .background(Color.Red).padding(20.dp)
+        modifier = modifier.padding(5.dp)
     ) {
         Canvas(modifier = Modifier
             .size(200.dp)) {
