@@ -20,7 +20,6 @@ class StepCounterService : Service(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
-    private var totalSteps = 0
 
     override fun onBind(intent: Intent): IBinder? {
         return null
@@ -31,7 +30,6 @@ class StepCounterService : Service(), SensorEventListener {
 
         // initializes step counter and sets the value for total steps
         StepCounterRepository.init(this)
-        totalSteps = StepCounterRepository.stepsFlow.value
 
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
@@ -55,9 +53,8 @@ class StepCounterService : Service(), SensorEventListener {
 
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
-            // Increment the step count for each step detected and update the repository
-            totalSteps++
-            StepCounterRepository.updateSteps(totalSteps)
+            // Increment the step count
+            StepCounterRepository.incrementSteps()
         }
     }
 

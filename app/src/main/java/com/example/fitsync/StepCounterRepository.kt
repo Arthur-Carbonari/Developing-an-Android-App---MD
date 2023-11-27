@@ -25,9 +25,9 @@ object StepCounterRepository {
 
     }
 
-    fun updateSteps(steps: Int) {
-        _stepsFlow.value = steps
-        sharedPreferences.edit().putInt("steps", steps).apply()
+    fun incrementSteps() {
+        _stepsFlow.value++
+        sharedPreferences.edit().putInt("steps", _stepsFlow.value).apply()
     }
 
     private fun startCurrentDay() {
