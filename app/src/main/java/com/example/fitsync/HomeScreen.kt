@@ -108,9 +108,9 @@ fun ActivityCard(){
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                Text("$calories/300 CAL", style = MaterialTheme.typography.bodyLarge)
-                Text("$steps Steps", style = MaterialTheme.typography.bodyLarge)
+                Text("$steps/$goal Steps", style = MaterialTheme.typography.bodyLarge)
                 Text("${distance}KM Distance", style = MaterialTheme.typography.bodyLarge)
+                Text("$calories", style = MaterialTheme.typography.bodyLarge)
             }
 
             CustomCircularProgressIndicator(
