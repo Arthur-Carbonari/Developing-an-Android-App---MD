@@ -25,10 +25,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.google.android.gms.tasks.Task
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistrationScreen(navController: NavController, onSignInClick: () -> Unit) {
+fun RegistrationScreen(navController: NavController, onSignInClick: () -> Task<Void>) {
 
     //For now  this is always the first screen the user sees, later it will only show up if the
     //the user is not logged in
@@ -91,8 +92,9 @@ fun RegistrationScreen(navController: NavController, onSignInClick: () -> Unit) 
 
                 Button(
                     onClick = {
-                        onSignInClick()
-                        registerUser(name, height, weight, stepsGoal, navController)
+                        onSignInClick().addOnCompleteListener {
+                            registerUser(name, height, weight, stepsGoal, navController)
+                        }
                     }
                 ) {
                     Text("Register", Modifier.padding(2.dp), style = MaterialTheme.typography.titleLarge)
