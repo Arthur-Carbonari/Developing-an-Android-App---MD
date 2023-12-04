@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -61,5 +63,15 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.1.0")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
+
+    implementation("com.google.dagger:hilt-android:2.44")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 }
+
+
+// Allow references to generated code
+kapt {
+    correctErrorTypes = true
+}
+
 
