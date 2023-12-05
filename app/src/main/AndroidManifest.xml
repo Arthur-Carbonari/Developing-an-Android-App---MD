@@ -41,3 +41,5 @@
     </application>
 
 </manifest>
+
+<!--TODO test app as it is right now, then make necessary changes to launch SplashActivity first and see if it still works -->
