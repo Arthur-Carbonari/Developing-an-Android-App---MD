@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/purple_200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/footsteps</item>
+        <item name="postSplashScreenTheme">@style/Theme.FitSync</item>
+        <!-- Duration of the splash screen animation -->
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+    </style>
+
+
     <style name="Theme.FitSync" parent="android:Theme.Material.Light.NoActionBar" />
 </resources>
