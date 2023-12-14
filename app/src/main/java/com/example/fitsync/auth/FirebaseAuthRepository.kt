@@ -13,9 +13,9 @@ import javax.inject.Inject
 class FirebaseAuthRepository @Inject constructor() {
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
-    fun getAuthStateFlow(): Flow<FirebaseUser?> = callbackFlow {
+    val authStateFlow: Flow<FirebaseUser?> = callbackFlow {
         val authStateListener = FirebaseAuth.AuthStateListener { auth ->
-            trySend(auth.currentUser).isSuccess
+            trySend(auth.currentUser)
         }
 
         firebaseAuth.addAuthStateListener(authStateListener)
