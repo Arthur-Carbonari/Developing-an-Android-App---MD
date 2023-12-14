@@ -1,5 +1,6 @@
 package com.example.fitsync.auth
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -37,6 +38,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
         AuthViewModel.AuthenticationState.AUTHENTICATED -> {
             LaunchedEffect(Unit) {
                 context.startActivity(Intent(context, MainActivity::class.java))
+                (context as? Activity)?.finish()
             }
         }
         AuthViewModel.AuthenticationState.ERROR -> {
