@@ -22,13 +22,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
 class MainActivity : ComponentActivity() {
-    private lateinit var googleSignInClient: GoogleSignInClient
 
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        configureGoogleSignIn()
 
         setContent {
             FitSyncTheme {
@@ -36,75 +33,12 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen(::signIn)
+                    MainScreen()
                 }
             }
         }
 
         startStepCounterService()
-    }
-
-    /**
-     * Configures Google Sign-In options and initializes the GoogleSignInClient.
-     * It sets up the request for the user's ID token and email.
-     */
-    private fun configureGoogleSignIn() {
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
-        googleSignInClient = GoogleSignIn.getClient(this, gso)
-    }
-
-    /**
-     * Starts the Google Sign-In process. It first signs out any existing user
-     * to ensure the sign-in dialog is displayed every time. Then, it initiates
-     * the sign-in intent, allowing the user to choose a Google account to sign in with.
-     * @return Task representing the pending result of the sign-out operation.
-     */
-    private fun signIn(): Task<Void> {
-        // First, sign out from any existing session
-        return googleSignInClient.signOut().addOnCompleteListener {
-            // After signing out, start the sign-in process
-            val signInIntent = googleSignInClient.signInIntent
-            startActivityForResult(signInIntent, RC_SIGN_IN)
-        }
-    }
-
-    /**
-     * Handles the result from the Google Sign-In activity. If the result is successful,
-     * it retrieves the signed-in account and proceeds to authenticate with Firebase.
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                // Handle exception
-            }
-        }
-    }
-
-    /**
-     * Authenticates the user with Firebase using the ID token from Google Sign-In.
-     * On successful authentication, it updates the UI with the signed-in user's information.
-     * @param idToken The ID token from Google Sign-In used for authenticating with Firebase.
-     */
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-        FirebaseAuth.getInstance().signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                } else {
-                    // If sign in fails, display a message to the user.
-                }
-            }
     }
 
     /**

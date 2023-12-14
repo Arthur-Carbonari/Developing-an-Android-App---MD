@@ -36,12 +36,11 @@ import com.google.android.gms.tasks.Task
 /**
  * Composable function for the main screen of the app.
  * It sets up the navigation controller and manages navigation to different screens.
- * @param onSignInClick Lambda function triggered for signing in.
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(onSignInClick: () -> Task<Void>) {
+fun MainScreen() {
     val navController = rememberNavController()
     var showBottomBar by remember { mutableStateOf(false) }
 
@@ -53,8 +52,8 @@ fun MainScreen(onSignInClick: () -> Task<Void>) {
                 .fillMaxSize()
                 .padding(innerPadding),
         ) {
-            NavHost(navController, startDestination = AppRoutes.REGISTRATION.name) {
-                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
+            NavHost(navController, startDestination = AppRoutes.HOME.name) {
+//                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
                 composable(AppRoutes.HOME.name) { HomeScreen() }
                 composable(AppRoutes.JOURNAL.name) { JournalScreen() }
                 composable(AppRoutes.PROFILE.name) { ProfileScreen() }
