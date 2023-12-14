@@ -34,4 +34,8 @@ class FirebaseAuthRepository @Inject constructor() {
     fun signOut() {
         firebaseAuth.signOut()
     }
+
+    fun getCurrentUserId(): String? {
+        return firebaseAuth.currentUser?.uid
+    }
 }
