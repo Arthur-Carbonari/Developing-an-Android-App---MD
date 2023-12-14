@@ -13,10 +13,10 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class FirestoreUserRepository @Inject constructor(
-    firebaseAuthRepository: FirebaseAuthRepository
+    firebaseAuthRepository: FirebaseAuthRepository,
+    db: FirebaseFirestore,
 ) {
 
-    private val db = FirebaseFirestore.getInstance()
     private val usersCollection = db.collection("users")
 
     val currentUserData: Flow<User?> = firebaseAuthRepository.authStateFlow
