@@ -1,4 +1,4 @@
-package com.example.fitsync
+package com.example.fitsync.steps
 
 import android.app.Service
 import android.content.Intent
@@ -15,12 +15,20 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.example.fitsync.MainActivity
+import com.example.fitsync.R
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * Service class for counting steps. It listens to the step detector sensor and
  * updates the step count accordingly.
  */
+@AndroidEntryPoint
 class StepCounterService : Service(), SensorEventListener {
+
+    @Inject
+    lateinit var stepCounterRepository: StepCounterRepository
 
     private lateinit var sensorManager: SensorManager
     private var stepSensor: Sensor? = null
@@ -35,8 +43,6 @@ class StepCounterService : Service(), SensorEventListener {
         super.onCreate()
 
         // initializes step counter and sets the value for total steps
-        StepCounterRepository.init(this)
-
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
 
@@ -69,7 +75,7 @@ class StepCounterService : Service(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
             // Increment the step count
-            StepCounterRepository.incrementSteps()
+            stepCounterRepository.incrementSteps()
         }
     }
 

@@ -1,4 +1,4 @@
-package com.example.fitsync
+package com.example.fitsync.home
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.Dp
 import java.time.DayOfWeek
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Composable function for the Home screen of the app.
@@ -34,7 +35,7 @@ import androidx.compose.material.*
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun HomeScreen() {
+fun HomeScreen(homeViewModel: HomeViewModel) {
     // Placeholder data
 
     val date = LocalDate.now()
@@ -54,7 +55,7 @@ fun HomeScreen() {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        ActivityCard()
+        ActivityCard(homeViewModel.stepsFlow)
         Spacer(modifier = Modifier.height(16.dp))
 
         WeekRecap()
@@ -88,13 +89,15 @@ fun HomeScreen() {
     }
 }
 
+
+
 /**
  * Composable function that displays an activity card.
  * The card shows the user's current step count, distance covered, and calories burned.
  */
 @Composable
-fun ActivityCard(){
-    val steps by StepCounterRepository.stepsFlow.collectAsState()
+fun ActivityCard(stepsFlow: StateFlow<Int>){
+    val steps by stepsFlow.collectAsState()
 
     val goal = 1200
     val averageStepLengthMeters = 175 * 0.415 / 100
