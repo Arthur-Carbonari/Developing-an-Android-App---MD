@@ -1,5 +1,8 @@
 package com.example.fitsync.profile
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,14 +39,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.fitsync.R
+import com.example.fitsync.auth.AuthActivity
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * Composable function for displaying the Profile screen.
  * It shows the user's profile picture, name, and other profile options.
  */
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(profileViewModel: ProfileViewModel, context: Context = LocalContext.current) {
+
     val user = FirebaseAuth.getInstance().currentUser
     val userName = user?.displayName ?: "Guest"
     val profilePhotoUrl = user?.photoUrl
@@ -96,8 +105,16 @@ fun ProfileScreen() {
             ProfileOptionItem(title = "Account Settings", icon = Icons.Filled.Settings)
             Card(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp).clickable {
-                    FirebaseAuth.getInstance().signOut()
-                },
+                    CoroutineScope(Dispatchers.Main).launch {
+                        val logoutTask = profileViewModel.logout()
+                        logoutTask.addOnCompleteListener {
+                            if (it.isSuccessful) {
+                                // On  logout success, navigate to AuthActivity
+                                context.startActivity(Intent(context, AuthActivity::class.java))
+                                (context as? Activity)?.finish()
+                            }
+                        }
+                    } },
                 shape = MaterialTheme.shapes.large,
                 colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
             ) {

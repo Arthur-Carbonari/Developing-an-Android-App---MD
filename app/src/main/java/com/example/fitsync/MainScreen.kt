@@ -26,12 +26,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.fitsync.profile.ProfileScreen
+import com.example.fitsync.profile.ProfileViewModel
 
 /**
  * Composable function for the main screen of the app.
@@ -43,6 +45,8 @@ import com.example.fitsync.profile.ProfileScreen
 fun MainScreen() {
     val navController = rememberNavController()
     var showBottomBar by remember { mutableStateOf(false) }
+
+    val profileViewModel: ProfileViewModel = viewModel()
 
     Scaffold(
         bottomBar = { if(showBottomBar) MyNavigationBar(navController) }
@@ -56,7 +60,7 @@ fun MainScreen() {
 //                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
                 composable(AppRoutes.HOME.name) { HomeScreen() }
                 composable(AppRoutes.JOURNAL.name) { JournalScreen() }
-                composable(AppRoutes.PROFILE.name) { ProfileScreen() }
+                composable(AppRoutes.PROFILE.name) { ProfileScreen(profileViewModel) }
             }
         }
     }
