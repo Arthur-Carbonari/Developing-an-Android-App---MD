@@ -58,7 +58,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         ActivityCard(homeViewModel.stepsFlow)
         Spacer(modifier = Modifier.height(16.dp))
 
-        WeekRecap()
+        WeekRecap(homeViewModel.currentWeekStats)
         Spacer(modifier = Modifier.height(16.dp))
 
         DailyChallengeCard()
@@ -176,19 +176,11 @@ data class DayStats(
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeekRecap() {
-    val daysOfWeekStats = listOf(
-        DayStats(DayOfWeek.MONDAY, 0.6f),
-        DayStats(DayOfWeek.TUESDAY, 0.5f),
-        DayStats(DayOfWeek.WEDNESDAY, 0.8f),
-        DayStats(DayOfWeek.THURSDAY, 0.3f),
-        DayStats(DayOfWeek.FRIDAY, 0.7f),
-        DayStats(DayOfWeek.SATURDAY, 0.2f),
-        DayStats(DayOfWeek.SUNDAY, 0.9f)
-    )
+fun WeekRecap(weekStats: StateFlow<List<DayStats>>) {
+    val weekStatsState by weekStats.collectAsState()
 
     LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        items(daysOfWeekStats) { dayOfWeek ->
+        items(weekStatsState) { dayOfWeek ->
             DailyRecap(progress = dayOfWeek.progress, dayOfWeek = dayOfWeek.dayOfWeek)
         }
     }
