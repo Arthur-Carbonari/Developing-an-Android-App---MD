@@ -3,24 +3,18 @@ package com.example.fitsync
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.fitsync.ui.theme.FitSyncTheme
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @RequiresApi(Build.VERSION_CODES.R)
@@ -55,16 +49,4 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    companion object {
-        private const val RC_SIGN_IN = 9001
-    }
-}
-
-// Preview function
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun MainContentPreview() {
-    FitSyncTheme{
-    }
 }
