@@ -11,35 +11,36 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/footsteps"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.FitSync"
+        android:theme="@style/Theme.App.Starting"
         tools:targetApi="31">
+
+        <!-- SplashActivity with MAIN action and LAUNCHER category -->
         <activity
             android:name=".SplashActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <!-- StepCounterService configuration -->
         <service
             android:name=".StepCounterService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="health" />
 
+        <!-- MainActivity without the MAIN action and LAUNCHER category -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.FitSync">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:theme="@style/Theme.FitSync" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>
-
-<!--TODO test app as it is right now, then make necessary changes to launch SplashActivity first and see if it still works -->
