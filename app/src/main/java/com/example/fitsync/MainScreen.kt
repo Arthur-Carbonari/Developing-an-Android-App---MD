@@ -32,6 +32,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.fitsync.home.HomeScreen
+import com.example.fitsync.home.HomeViewModel
+import com.example.fitsync.journal.JournalScreen
+import com.example.fitsync.journal.JournalViewModel
 import com.example.fitsync.profile.ProfileScreen
 import com.example.fitsync.profile.ProfileViewModel
 
@@ -46,7 +50,10 @@ fun MainScreen() {
     val navController = rememberNavController()
     var showBottomBar by remember { mutableStateOf(false) }
 
+    val homeViewModel: HomeViewModel = viewModel()
+    val journalViewModel: JournalViewModel = viewModel()
     val profileViewModel: ProfileViewModel = viewModel()
+
 
     Scaffold(
         bottomBar = { if(showBottomBar) MyNavigationBar(navController) }
@@ -58,8 +65,8 @@ fun MainScreen() {
         ) {
             NavHost(navController, startDestination = AppRoutes.HOME.name) {
 //                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
-                composable(AppRoutes.HOME.name) { HomeScreen() }
-                composable(AppRoutes.JOURNAL.name) { JournalScreen() }
+                composable(AppRoutes.HOME.name) { HomeScreen(homeViewModel) }
+                composable(AppRoutes.JOURNAL.name) { JournalScreen(journalViewModel) }
                 composable(AppRoutes.PROFILE.name) { ProfileScreen(profileViewModel) }
             }
         }

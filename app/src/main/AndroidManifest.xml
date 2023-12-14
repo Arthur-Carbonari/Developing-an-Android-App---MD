@@ -30,7 +30,7 @@
 
         <!-- StepCounterService configuration -->
         <service
-            android:name=".StepCounterService"
+            android:name=".steps.StepCounterService"
             android:enabled="true"
             android:exported="true"
             android:foregroundServiceType="health" />

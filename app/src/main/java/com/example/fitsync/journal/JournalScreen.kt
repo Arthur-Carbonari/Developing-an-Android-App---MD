@@ -1,4 +1,4 @@
-package com.example.fitsync
+package com.example.fitsync.journal
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -20,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -28,20 +27,6 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.fitsync.auth.AuthViewModel
-import com.example.fitsync.auth.FirebaseAuthRepository
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import javax.inject.Inject
 
 
 /**
@@ -49,7 +34,7 @@ import javax.inject.Inject
  * It shows a performance chart based on the user's past week's step counts and other relevant data.
  */
 @Composable
-fun JournalScreen() {
+fun JournalScreen(journalViewModel: JournalViewModel) {
     val pastWeek = listOf(2000f, 1200f, 900f, 1100f, 2200f, 2100f, 1900f)
 
     Column(modifier = Modifier.padding(16.dp)) {
