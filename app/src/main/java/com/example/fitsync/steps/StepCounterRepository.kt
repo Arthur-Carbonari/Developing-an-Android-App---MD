@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @Singleton
 class StepCounterRepository @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    private val firestoreStepRepository: FirestoreStepRepository // Firestore repository
+    private val firestoreStepRepository: FirestoreStepRepository,
 ) {
     private val _stepsFlow = MutableStateFlow(0)
     val stepsFlow: StateFlow<Int> = _stepsFlow.asStateFlow()
@@ -61,5 +61,18 @@ class StepCounterRepository @Inject constructor(
     private fun startCurrentDay() {
         _stepsFlow.value = 0
         updateSharedPreferences()
+    }
+
+    /**
+     * Saves the current step count to both SharedPreferences and Firestore.
+     */
+    fun saveCurrentSteps() {
+        // Update SharedPreferences with the current steps
+        updateSharedPreferences()
+
+        // Save the steps to Firestore
+        val weekId = currentDay.getWeekId()
+        val daySteps = DaySteps(currentDay.toString(), _stepsFlow.value)
+        firestoreStepRepository.saveStepsForDay(weekId, daySteps)
     }
 }

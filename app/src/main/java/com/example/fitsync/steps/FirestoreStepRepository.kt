@@ -1,15 +1,20 @@
 package com.example.fitsync.steps
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.fitsync.auth.FirebaseAuthRepository
 import com.example.fitsync.steps.models.DaySteps
 import com.example.fitsync.steps.models.WeekSteps
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.temporal.WeekFields
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
+@RequiresApi(Build.VERSION_CODES.O)
 class FirestoreStepRepository @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
     db: FirebaseFirestore,
@@ -25,12 +30,14 @@ class FirestoreStepRepository @Inject constructor(
                 .document(weekId)
 
             weekDocument.get().addOnSuccessListener { document ->
+                val dayOfWeek = LocalDate.parse(daySteps.date).dayOfWeek // Convert date string to DayOfWeek
+
                 if (document.exists()) {
                     // Update the existing document
-                    weekDocument.update("days.${daySteps.date}", daySteps.toMap())
+                    weekDocument.update("days.${dayOfWeek.name}", daySteps.toMap())
                 } else {
                     // Create a new week document
-                    val newWeek = WeekSteps(weekId, mapOf(DayOfWeek.valueOf(daySteps.date) to daySteps))
+                    val newWeek = WeekSteps(weekId, mapOf(dayOfWeek to daySteps))
                     weekDocument.set(newWeek.toFirestoreMap())
                 }
             }
@@ -63,7 +70,12 @@ class FirestoreStepRepository @Inject constructor(
     }
 
     private fun createEmptyWeek(weekId: String): WeekSteps {
-        val emptyDays = DayOfWeek.values().associateWith { DaySteps(it.toString(), 0) }
+        // Generate an empty map for each day of the week
+        val emptyDays = DayOfWeek.values().associateWith { dayOfWeek ->
+            val date = LocalDate.now().with(WeekFields.ISO.dayOfWeek(), dayOfWeek.value.toLong())
+            DaySteps(date.toString(), 0)
+        }
         return WeekSteps(weekId, emptyDays)
     }
+
 }

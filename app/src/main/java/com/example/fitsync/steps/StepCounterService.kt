@@ -72,6 +72,7 @@ class StepCounterService : Service(), SensorEventListener {
      * Increments the step count in the repository.
      * @param event The SensorEvent.
      */
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onSensorChanged(event: SensorEvent) {
         if (event.sensor.type == Sensor.TYPE_STEP_DETECTOR) {
             // Increment the step count
@@ -114,7 +115,9 @@ class StepCounterService : Service(), SensorEventListener {
             .build()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onDestroy() {
+        stepCounterRepository.saveCurrentSteps()
         super.onDestroy()
         sensorManager.unregisterListener(this)
     }
