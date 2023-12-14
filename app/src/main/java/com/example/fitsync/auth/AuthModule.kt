@@ -16,6 +16,12 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AuthModule {
 
+    @Singleton
+    @Provides
+    fun provideFirebaseAuthRepository(): FirebaseAuthRepository {
+        return FirebaseAuthRepository()
+    }
+
     @Provides
     @Singleton
     fun provideGoogleSignInOptions(@ApplicationContext context: Context): GoogleSignInOptions {
