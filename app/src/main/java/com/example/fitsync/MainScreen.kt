@@ -31,7 +31,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.android.gms.tasks.Task
+import com.example.fitsync.profile.ProfileScreen
 
 /**
  * Composable function for the main screen of the app.

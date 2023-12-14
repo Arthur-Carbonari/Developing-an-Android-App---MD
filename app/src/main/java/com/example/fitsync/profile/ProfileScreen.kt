@@ -1,4 +1,4 @@
-package com.example.fitsync
+package com.example.fitsync.profile
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -35,6 +35,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.fitsync.R
 import com.google.firebase.auth.FirebaseAuth
 
 /**
