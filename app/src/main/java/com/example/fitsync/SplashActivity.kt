@@ -3,6 +3,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import com.example.fitsync.auth.AuthActivity
 
 class SplashActivity : ComponentActivity() {
 
@@ -15,7 +16,7 @@ class SplashActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // Navigate to MainActivity after initialization is complete.
-        startActivity(Intent(this, MainActivity::class.java))
+        startActivity(Intent(this, AuthActivity::class.java))
         finish()
     }
 }

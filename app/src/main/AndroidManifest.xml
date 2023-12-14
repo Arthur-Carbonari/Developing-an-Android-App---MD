@@ -41,6 +41,11 @@
             android:exported="true"
             android:theme="@style/Theme.FitSync" />
 
+        <activity
+            android:name=".auth.AuthActivity"
+            android:exported="true"
+            android:theme="@style/Theme.FitSync" />
+
     </application>
 
 </manifest>
