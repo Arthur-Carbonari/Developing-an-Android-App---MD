@@ -33,7 +33,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+ import androidx.compose.ui.text.style.TextAlign
+ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitsync.MainActivity
 import com.example.fitsync.R
@@ -89,17 +90,18 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
         verticalArrangement = Arrangement.SpaceAround,
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.banner_img),
-            contentDescription = "banner"
-        )
 
         Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text("Welcome to FitSync", style = MaterialTheme.typography.displayMedium)
+            Image(
+                painter = painterResource(id = R.drawable.banner_img),
+                contentDescription = "banner"
+            )
+            Spacer(Modifier.height(20.dp))
+            Text("Welcome to FitSync", style = MaterialTheme.typography.displaySmall, textAlign = TextAlign.Center)
             Spacer(Modifier.height(10.dp))
-            Text("Let us help you with your health journey", style = MaterialTheme.typography.titleLarge)
+            Text("Let us help you with your health journey", style = MaterialTheme.typography.titleLarge, textAlign = TextAlign.Center)
         }
 
 
