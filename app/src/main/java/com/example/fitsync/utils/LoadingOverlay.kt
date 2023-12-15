@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 
+// Composable function for displaying a loading overlay.
 @Composable
 fun LoadingOverlay() {
     Box(

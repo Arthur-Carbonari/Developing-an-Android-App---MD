@@ -14,18 +14,21 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+// Handles Google Sign-In and Firebase authentication. Uses Hilt for dependency injection.
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
     private val googleSignInClient: GoogleSignInClient
 ) : ViewModel() {
 
+    // MutableStateFlow to manage the authentication state.
     private val _authenticationState = MutableStateFlow<AuthenticationState?>(null)
     val authenticationState = _authenticationState.asStateFlow()
 
     // Expose the Google Sign-In Intent to the UI
     val signInIntent: Intent get() = googleSignInClient.signInIntent
 
+    // MutableStateFlow to manage loading state during authentication.
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -42,6 +45,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    // Authenticates the user with Google's ID token using Firebase.
     private fun authenticateWithGoogle(idToken: String) {
         viewModelScope.launch {
             try {

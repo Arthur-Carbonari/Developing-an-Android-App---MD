@@ -17,15 +17,20 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
+// Manages user data interactions with Firestore.
+// Uses Dagger Hilt for dependency injection.
 class FirestoreUserRepository @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
     db: FirebaseFirestore,
 ) {
 
+    // Reference to the 'users' collection in Firestore
     private val usersCollection = db.collection("users")
 
+    // A shared flow to trigger refreshes of the current user's data.
     private val refreshTrigger = MutableSharedFlow<Unit>()
 
+    // A Flow that emits the current user's data. Combines authentication state with a refresh trigger.
     @OptIn(ExperimentalCoroutinesApi::class)
     val currentUserData: Flow<User?> = firebaseAuthRepository.authStateFlow
         .combine(refreshTrigger.onStart { emit(Unit) }) { user, _ -> user }
@@ -35,10 +40,12 @@ class FirestoreUserRepository @Inject constructor(
         .distinctUntilChanged()
 
 
+    // Triggers a refresh of the current user's data.
     suspend fun refreshCurrentUser() {
         refreshTrigger.emit(Unit)
     }
 
+    // Creates a Flow to fetch and emit a specific user's data from Firestore.
     private fun getUserDataFlow(firebaseUser: FirebaseUser): Flow<User?> = flow {
         val userId = firebaseUser.uid
         val documentSnapshot = usersCollection.document(userId).get().await()
@@ -63,6 +70,7 @@ class FirestoreUserRepository @Inject constructor(
         emit(user)
     }
 
+    // Updates the user's height, weight, and goal in Firestore.
     fun updateUserDetails(height: Int, weight: Int, goal: Int): Task<Void> {
         val userId = firebaseAuthRepository.getCurrentUserId()
         return if (userId != null) {

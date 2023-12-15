@@ -24,6 +24,7 @@ import java.time.DayOfWeek
 import java.time.LocalDate
 import javax.inject.Inject
 
+// Manages step counting and user data interactions. Uses Hilt for dependency injection.
 @RequiresApi(Build.VERSION_CODES.O)
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -32,12 +33,16 @@ class HomeViewModel @Inject constructor(
     private val firestoreUserRepository: FirestoreUserRepository
 ) : ViewModel() {
 
+    // Exposes the current step count as an immutable StateFlow.
     @RequiresApi(Build.VERSION_CODES.O)
     val stepsFlow: StateFlow<Int> = stepCounterRepository.stepsFlow
 
+    // Updates user details (height, weight, goal) in Firestore.
     fun updateUserDetails(height: Int, weight: Int, goal: Int): Task<Void> {
         return firestoreUserRepository.updateUserDetails(height, weight, goal)
     }
+
+    // MutableStateFlow to manage current week's steps data.
     private val _currentWeekStats = MutableStateFlow<Map<DayOfWeek, DaySteps>>(emptyMap())
     val currentWeekStats: StateFlow<Map<DayOfWeek, DaySteps>> = _currentWeekStats
 
@@ -46,9 +51,10 @@ class HomeViewModel @Inject constructor(
         .map { user -> user?.goal }
         .stateIn(viewModelScope, SharingStarted.Lazily, null)
 
+    // Fetches the current week's steps data on initialization.
     init { fetchCurrentWeekSteps() }
 
-
+    // Fetches and updates the current week's steps data.
     @RequiresApi(Build.VERSION_CODES.O)
     private fun fetchCurrentWeekSteps() {
         viewModelScope.launch {
@@ -59,7 +65,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
+    // Toggles the step counter service on or off based on its current state.
     fun toggleStepCounterService(context: Context, isServiceRunning: Boolean): Boolean {
         val serviceIntent = Intent(context, StepCounterService::class.java)
         return if (isServiceRunning) {
@@ -77,6 +83,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    // Triggers a refresh of the current user data in Firestore.
     fun triggerRefresh() {
         viewModelScope.launch { firestoreUserRepository.refreshCurrentUser() }
     }

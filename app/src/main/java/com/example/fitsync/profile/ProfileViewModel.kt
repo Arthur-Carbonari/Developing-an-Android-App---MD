@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
+// ViewModel for managing the user profile
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val googleSignInClient: GoogleSignInClient,
@@ -23,6 +24,7 @@ class ProfileViewModel @Inject constructor(
     firestoreUserRepository: FirestoreUserRepository,
 ) : ViewModel() {
 
+    // Internal MutableStateFlow to manage loading state.
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
@@ -31,6 +33,7 @@ class ProfileViewModel @Inject constructor(
         .filterNotNull()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), null)
 
+    // Function to handle user logout. Sets the loading state and signs out from Google and Firebase.
     fun logout(): Task<Void> {
         _isLoading.value = true
         return googleSignInClient.signOut().also {

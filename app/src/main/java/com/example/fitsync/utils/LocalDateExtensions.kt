@@ -6,6 +6,7 @@ import java.time.LocalDate
 import java.time.temporal.WeekFields
 import java.util.Locale
 
+// Extension function for LocalDate to generate a week identifier string.
 @RequiresApi(Build.VERSION_CODES.O)
 fun LocalDate.getWeekId(): String {
     val weekOfYear = this.get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear())

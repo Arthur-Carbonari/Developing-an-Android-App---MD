@@ -12,16 +12,19 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
+// Dagger Hilt module to provide authentication-related dependencies.
 @Module
 @InstallIn(SingletonComponent::class)
 object AuthModule {
 
+    // Provides a singleton instance of FirebaseAuthRepository.
     @Singleton
     @Provides
     fun provideFirebaseAuthRepository(): FirebaseAuthRepository {
         return FirebaseAuthRepository()
     }
 
+    // Provides GoogleSignInOptions configured for the app.
     @Provides
     @Singleton
     fun provideGoogleSignInOptions(@ApplicationContext context: Context): GoogleSignInOptions {
@@ -31,6 +34,7 @@ object AuthModule {
             .build()
     }
 
+    // Provides a GoogleSignInClient configured with the given GoogleSignInOptions.
     @Provides
     @Singleton
     fun provideGoogleSignInClient(@ApplicationContext context: Context, gso: GoogleSignInOptions): GoogleSignInClient {

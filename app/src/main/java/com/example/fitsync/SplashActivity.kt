@@ -8,12 +8,14 @@ import com.example.fitsync.auth.FirebaseAuthRepository
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
+// Android entry point for the splash screen activity
 @AndroidEntryPoint
 class SplashActivity : ComponentActivity() {
 
     @Inject
     lateinit var firebaseAuthRepository: FirebaseAuthRepository
 
+    // Sets up the activity and handles the splash screen transition.
     override fun onCreate(savedInstanceState: Bundle?) {
         // Handle the splash screen transition.
         installSplashScreen().apply { setKeepOnScreenCondition { true } }
@@ -28,11 +30,13 @@ class SplashActivity : ComponentActivity() {
         }
     }
 
+    // Navigates to the MainActivity and finishes the current activity.
     private fun navigateToMainActivity() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
+    // Navigates to the AuthActivity and finishes the current activity.
     private fun navigateToAuthActivity() {
         startActivity(Intent(this, AuthActivity::class.java))
         finish()

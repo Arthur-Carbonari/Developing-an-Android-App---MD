@@ -20,13 +20,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.google.android.gms.tasks.Task
 
 /**
  * Composable function for the registration form.
  * It allows the user to enter personal information and register in the app.
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistrationForm(
     onRegisterClicked: (String, String, String) -> Unit
@@ -83,29 +83,4 @@ fun RegistrationDialog(
         },
         confirmButton = {}
     )
-}
-
-/**
- * Function to handle user registration.
- * It logs the user's input and navigates to the home screen of the app.
- * @param name The name entered by the user.
- * @param height The height of the user in centimeters.
- * @param weight The weight of the user in kilograms.
- * @param stepsGoal The daily step goal set by the user.
- * @param navController NavController for navigating between screens.
- */
-private fun registerUser(
-    name: String,
-    height: String,
-    weight: String,
-    stepsGoal: String,
-    navController: NavController,
-) {
-    // For now we just log the user's input here. later the data will be saved
-    print("$name, Height: $height, Weight: $weight, Steps Goal: $stepsGoal")
-
-    // Navigate to the app home screen
-    navController.navigate(AppRoutes.HOME.name) {
-        // Clear the back stack so the user cannot navigate back to the registration screen
-    }
 }

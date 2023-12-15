@@ -42,6 +42,7 @@ import com.example.fitsync.ui.theme.FitSyncTheme
  import com.example.fitsync.utils.LoadingOverlay
  import dagger.hilt.android.AndroidEntryPoint
 
+// Android entry point for the authentication activity
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,6 +60,7 @@ class AuthActivity : ComponentActivity() {
     }
 }
 
+// Composable function for the authentication screen.
 @Composable
 fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
     val context = LocalContext.current
@@ -138,7 +140,7 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
 
 }
 
-
+// Composable function to display an error dialog.
 @Composable
 fun ErrorDialog() {
     AlertDialog(

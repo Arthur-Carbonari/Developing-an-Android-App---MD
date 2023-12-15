@@ -13,14 +13,18 @@ import java.time.temporal.WeekFields
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Singleton repository for managing step data in Firestore.
 @Singleton
 @RequiresApi(Build.VERSION_CODES.O)
 class FirestoreStepRepository @Inject constructor(
     private val firebaseAuthRepository: FirebaseAuthRepository,
     db: FirebaseFirestore,
     ) {
+
+    // Reference to the 'users' collection in Firestore.
     private val usersCollection = db.collection("users")
 
+    // Saves the step count for a specific day in a user's week document in Firestore.
     fun saveStepsForDay(weekId: String, daySteps: DaySteps) {
         val userId = firebaseAuthRepository.getCurrentUserId()
         if (userId != null) {
@@ -44,6 +48,7 @@ class FirestoreStepRepository @Inject constructor(
         }
     }
 
+    // Retrieves or creates a week's step data for a user.
     suspend fun getOrCreateWeekData(weekId: String): WeekSteps {
         val userId = firebaseAuthRepository.getCurrentUserId()
         val weekData = if (userId != null) {
@@ -69,6 +74,7 @@ class FirestoreStepRepository @Inject constructor(
         return weekData.copy(days = sortedDays)
     }
 
+    // Creates an empty week with zero steps for each day.
     private fun createEmptyWeek(weekId: String): WeekSteps {
         // Generate an empty map for each day of the week
         val emptyDays = DayOfWeek.values().associateWith { dayOfWeek ->

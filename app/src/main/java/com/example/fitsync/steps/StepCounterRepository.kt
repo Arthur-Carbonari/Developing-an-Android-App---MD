@@ -11,17 +11,22 @@ import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// Repository for managing step counting data
 @RequiresApi(Build.VERSION_CODES.O)
 @Singleton
 class StepCounterRepository @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val firestoreStepRepository: FirestoreStepRepository,
 ) {
+
+    // MutableStateFlow to manage step count data.
     private val _stepsFlow = MutableStateFlow(0)
     val stepsFlow: StateFlow<Int> = _stepsFlow.asStateFlow()
 
+    // Tracks the current day to manage daily step counts.
     private var currentDay = LocalDate.now()
 
+    // Initializes the repository by loading stored data or starting a new day.
     init {
         val storedDay = sharedPreferences.getString("currentDay", null)
         val storedDayDate = LocalDate.parse(storedDay)
@@ -33,6 +38,7 @@ class StepCounterRepository @Inject constructor(
         }
     }
 
+    // Increments the step count and handles day transitions.
     fun incrementSteps() {
         _stepsFlow.value++
         val newDay = LocalDate.now()
@@ -45,12 +51,14 @@ class StepCounterRepository @Inject constructor(
         }
     }
 
+    // Stores the previous day's step count in Firestore.
     private fun storePreviousDaySteps(date: LocalDate) {
         val weekId = date.getWeekId()
         val daySteps = DaySteps(date.toString(), _stepsFlow.value)
         firestoreStepRepository.saveStepsForDay(weekId, daySteps)
     }
 
+    // Updates the shared preferences with the current step count and day.
     private fun updateSharedPreferences() {
         sharedPreferences.edit()
             .putInt("steps", _stepsFlow.value)
@@ -58,6 +66,7 @@ class StepCounterRepository @Inject constructor(
             .apply()
     }
 
+    // Resets the step count to zero and updates shared preferences at the start of a new day.
     private fun startCurrentDay() {
         _stepsFlow.value = 0
         updateSharedPreferences()
