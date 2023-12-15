@@ -136,6 +136,5 @@ private fun registerUser(
     // Navigate to the app home screen
     navController.navigate(AppRoutes.HOME.name) {
         // Clear the back stack so the user cannot navigate back to the registration screen
-        popUpTo(AppRoutes.REGISTRATION.name) { inclusive = true }
     }
 }

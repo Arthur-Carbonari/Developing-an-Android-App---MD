@@ -64,7 +64,6 @@ fun MainScreen() {
                 .padding(innerPadding),
         ) {
             NavHost(navController, startDestination = AppRoutes.HOME.name) {
-//                composable(AppRoutes.REGISTRATION.name) { RegistrationScreen(navController, onSignInClick) }
                 composable(AppRoutes.HOME.name) { HomeScreen(homeViewModel) }
                 composable(AppRoutes.JOURNAL.name) { JournalScreen(journalViewModel) }
                 composable(AppRoutes.PROFILE.name) { ProfileScreen(profileViewModel) }
@@ -73,12 +72,12 @@ fun MainScreen() {
     }
 
     // Listen for navigation changes to toggle the visibility of the bottom bar
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-        showBottomBar = when (destination.route) {
-            AppRoutes.REGISTRATION.name -> false
-            else -> true
-        }
-    }
+//    navController.addOnDestinationChangedListener { _, destination, _ ->
+//        showBottomBar = when (destination.route) {
+//            AppRoutes.REGISTRATION.name -> false
+//            else -> true
+//        }
+//    }
 }
 
 
