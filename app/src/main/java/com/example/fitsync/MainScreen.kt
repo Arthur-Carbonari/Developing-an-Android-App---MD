@@ -71,13 +71,13 @@ fun MainScreen() {
         }
     }
 
-    // Listen for navigation changes to toggle the visibility of the bottom bar
-//    navController.addOnDestinationChangedListener { _, destination, _ ->
-//        showBottomBar = when (destination.route) {
+//     Listen for navigation changes to toggle the visibility of the bottom bar
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+        showBottomBar = when (destination.route) {
 //            AppRoutes.REGISTRATION.name -> false
-//            else -> true
-//        }
-//    }
+            else -> true
+        }
+    }
 }
 
 

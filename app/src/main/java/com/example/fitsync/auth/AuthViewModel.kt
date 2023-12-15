@@ -8,6 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -25,6 +26,9 @@ class AuthViewModel @Inject constructor(
     // Expose the Google Sign-In Intent to the UI
     val signInIntent: Intent get() = googleSignInClient.signInIntent
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     // Process the Google Sign-In result
     fun processGoogleSignInResult(data: Intent?) {
         viewModelScope.launch {
@@ -41,6 +45,7 @@ class AuthViewModel @Inject constructor(
     private fun authenticateWithGoogle(idToken: String) {
         viewModelScope.launch {
             try {
+                _isLoading.value = true
                 val authResult = firebaseAuthRepository.firebaseAuthWithGoogle(idToken).await()
                 if (authResult.user != null) {
                     android.util.Log.d("AuthViewModel", "user logged in here")
@@ -55,6 +60,8 @@ class AuthViewModel @Inject constructor(
 
                 // Notify UI about the authentication failure
                 _authenticationState.value = AuthenticationState.ERROR
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -64,5 +71,4 @@ class AuthViewModel @Inject constructor(
         AUTHENTICATED, UNAUTHENTICATED, ERROR
     }
 
-//    TODO add loading state and handle it in the UI
 }

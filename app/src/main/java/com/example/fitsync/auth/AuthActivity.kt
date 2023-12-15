@@ -39,7 +39,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fitsync.MainActivity
 import com.example.fitsync.R
 import com.example.fitsync.ui.theme.FitSyncTheme
-import dagger.hilt.android.AndroidEntryPoint
+ import com.example.fitsync.utils.LoadingOverlay
+ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class AuthActivity : ComponentActivity() {
@@ -74,6 +75,12 @@ fun AuthScreen(authViewModel: AuthViewModel = viewModel()) {
             ErrorDialog()
         }
         else -> {}
+    }
+
+    val isLoading by authViewModel.isLoading.collectAsState()
+
+    if (isLoading) {
+        LoadingOverlay()
     }
 
     val googleSignInLauncher = rememberLauncherForActivityResult(

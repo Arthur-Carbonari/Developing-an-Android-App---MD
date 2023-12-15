@@ -42,6 +42,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.fitsync.R
 import com.example.fitsync.auth.AuthActivity
+import com.example.fitsync.utils.LoadingOverlay
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,6 +61,11 @@ fun ProfileScreen(profileViewModel: ProfileViewModel, context: Context = LocalCo
     val userName = currentUser?.name ?: "Guest"
     val profilePhotoUrl = currentUser?.photoUrl
 
+    val isLoading by profileViewModel.isLoading.collectAsState()
+
+    if (isLoading) {
+        LoadingOverlay()
+    }
     Column(
         modifier = Modifier.fillMaxWidth().fillMaxHeight().padding(16.dp),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -91,7 +97,7 @@ fun ProfileScreen(profileViewModel: ProfileViewModel, context: Context = LocalCo
 
             Text(userName, style = MaterialTheme.typography.titleLarge)
             Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+                "Champions keep playing until they get it right.",
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -130,10 +136,6 @@ fun ProfileScreen(profileViewModel: ProfileViewModel, context: Context = LocalCo
                     Spacer(modifier = Modifier.width(16.dp))
                     Text("Logout", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.weight(1f))
-//                    Icon(
-//                        imageVector = Icons.Filled.ArrowForward,
-//                        contentDescription = "Go to $title"
-//                    )
                 }
             }
 
