@@ -3,6 +3,7 @@ package com.example.fitsync.home
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import com.example.fitsync.RegistrationDialog
 import com.example.fitsync.steps.StepCounterService
 import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek
@@ -47,8 +49,29 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
     val scrollState = rememberScrollState()
 
+    val goalState by homeViewModel.goalFlow.collectAsState()
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    if(goalState == 0) showDialog = true
+    Log.d("test", "HomeScreen: $goalState")
+    Log.d("test", "HomeScreen: $showDialog")
+
+    if (showDialog) {
+        RegistrationDialog(
+            onSubmit = { height, weight, goal ->
+                homeViewModel.updateUserDetails(height, weight, goal).also { homeViewModel.triggerRefresh() }
+            }
+        ) {
+
+            showDialog = false
+        }
+    }
+
     Column(
-        modifier = Modifier.padding(16.dp).verticalScroll(scrollState)
+        modifier = Modifier
+            .padding(16.dp)
+            .verticalScroll(scrollState)
     ) {
         // Header
         Text(
@@ -61,10 +84,10 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        ActivityCard(homeViewModel.stepsFlow)
+        ActivityCard(homeViewModel)
         Spacer(modifier = Modifier.height(16.dp))
 
-        WeekRecap(homeViewModel.currentWeekStats)
+        WeekRecap(homeViewModel)
         Spacer(modifier = Modifier.height(16.dp))
 
         DailyChallengeCard()
@@ -100,11 +123,13 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
  * Composable function that displays an activity card.
  * The card shows the user's current step count, distance covered, and calories burned.
  */
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ActivityCard(stepsFlow: StateFlow<Int>){
-    val steps by stepsFlow.collectAsState()
+fun ActivityCard(homeViewModel: HomeViewModel){
+    val steps by homeViewModel.stepsFlow.collectAsState()
 
-    val goal = 1200
+    val goal by homeViewModel.goalFlow.collectAsState()
+
     val averageStepLengthMeters = 175 * 0.4 / 100
 
     val distance = steps * averageStepLengthMeters / 1000 // Convert to kilometers
@@ -133,7 +158,7 @@ fun ActivityCard(stepsFlow: StateFlow<Int>){
             }
 
             CustomCircularProgressIndicator(
-                progress = (steps / goal.toFloat()),
+                progress = if(goal != null) (steps / goal!!.toFloat()) else 0f,
                 modifier = Modifier.width(100.dp),
             )
 
@@ -181,12 +206,28 @@ data class DayStats(
  */
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeekRecap(weekStats: StateFlow<List<DayStats>>) {
-    val weekStatsState by weekStats.collectAsState()
+fun WeekRecap(homeViewModel: HomeViewModel) {
+    val weekStatsState by homeViewModel.currentWeekStats.collectAsState()
+    val goal by homeViewModel.goalFlow.collectAsState()
 
-    LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-        items(weekStatsState) { dayOfWeek ->
-            DailyRecap(progress = dayOfWeek.progress, dayOfWeek = dayOfWeek.dayOfWeek)
+    // Only proceed if goal is not null. Otherwise, do not display the recap.
+    val days = if (goal != null && goal != 0) {
+        weekStatsState.map { (dayOfWeek, dayStats) ->
+            DayStats(
+                dayOfWeek = dayOfWeek,
+                progress = (dayStats.steps / goal!!).toFloat()
+            )
+        }
+    } else {
+        emptyList()
+    }
+
+    // Display the UI only if there are days to display
+    if (days.isNotEmpty()) {
+        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+            items(days) { dayOfWeek ->
+                DailyRecap(progress = dayOfWeek.progress, dayOfWeek = dayOfWeek.dayOfWeek)
+            }
         }
     }
 }
