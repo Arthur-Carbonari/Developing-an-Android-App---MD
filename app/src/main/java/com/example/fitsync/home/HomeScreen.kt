@@ -1,45 +1,37 @@
 package com.example.fitsync.home
 
 import android.Manifest
-import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
-import androidx.compose.ui.Modifier
-import androidx.compose.runtime.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.Color
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.ui.unit.dp
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
-import java.time.DayOfWeek
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import com.example.fitsync.steps.StepCounterService
 import kotlinx.coroutines.flow.StateFlow
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 /**
  * Composable function for the Home screen of the app.
@@ -93,7 +85,7 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
 
                 }
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    StartStopStepCounterButton()
+                    StartStopStepCounterButton(homeViewModel)
                 }
             }
 
@@ -269,9 +261,10 @@ fun CustomCircularProgressIndicator(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun StartStopStepCounterButton() {
-    var isServiceRunning by remember { mutableStateOf(false) }
+fun StartStopStepCounterButton(homeViewModel: HomeViewModel) {
+    var isServiceRunning by remember { mutableStateOf(StepCounterService.isRunning) }
     val context = LocalContext.current
 
     // Prepare the permission launcher
@@ -280,7 +273,7 @@ fun StartStopStepCounterButton() {
         onResult = { isGranted: Boolean ->
             if (isGranted) {
                 // Permission granted, start or stop the service
-                toggleStepCounterService(context, isServiceRunning).also {
+                homeViewModel.toggleStepCounterService(context, isServiceRunning).also {
                     isServiceRunning = it
                 }
             } else {
@@ -293,13 +286,9 @@ fun StartStopStepCounterButton() {
     Button(onClick = {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             // For Android 10 and above, check and request permission
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACTIVITY_RECOGNITION
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
+            if (ContextCompat.checkSelfPermission( context, Manifest.permission.ACTIVITY_RECOGNITION) == PackageManager.PERMISSION_GRANTED) {
                 // Permission already granted
-                toggleStepCounterService(context, isServiceRunning).also {
+                homeViewModel.toggleStepCounterService(context, isServiceRunning).also {
                     isServiceRunning = it
                 }
             } else {
@@ -308,28 +297,11 @@ fun StartStopStepCounterButton() {
             }
         } else {
             // For below Android 10, permission is not needed
-            toggleStepCounterService(context, isServiceRunning).also {
+            homeViewModel.toggleStepCounterService(context, isServiceRunning).also {
                 isServiceRunning = it
             }
         }
     }) {
         Text(if (isServiceRunning) "Stop Counter" else "Start Counter")
-    }
-}
-
-private fun toggleStepCounterService(context: Context, isServiceRunning: Boolean): Boolean {
-    val serviceIntent = Intent(context, StepCounterService::class.java)
-    return if (isServiceRunning) {
-        // Stop the service
-        context.stopService(serviceIntent)
-        false
-    } else {
-        // Start the service
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            context.startForegroundService(serviceIntent)
-        } else {
-            context.startService(serviceIntent)
-        }
-        true
     }
 }

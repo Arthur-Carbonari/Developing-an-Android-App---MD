@@ -64,6 +64,8 @@ class StepCounterService : Service(), SensorEventListener {
         val notification = createNotification()
         startForeground(NOTIFICATION_ID, notification)
 
+        isRunning = true
+
         return START_STICKY
     }
 
@@ -120,10 +122,16 @@ class StepCounterService : Service(), SensorEventListener {
         stepCounterRepository.saveCurrentSteps()
         super.onDestroy()
         sensorManager.unregisterListener(this)
+
+        isRunning = false
     }
 
     companion object {
         const val CHANNEL_ID = "StepCounterServiceChannel"
         const val NOTIFICATION_ID = 1
+
+        @Volatile
+        var isRunning = false
+            private set
     }
 }
