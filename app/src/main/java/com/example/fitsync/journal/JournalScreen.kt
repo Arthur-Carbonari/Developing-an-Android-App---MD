@@ -64,8 +64,6 @@ fun JournalScreen(journalViewModel: JournalViewModel) {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Text(text = "there will be other things in here")
-//            ArcComposable(Modifier)
         }
     }
 
