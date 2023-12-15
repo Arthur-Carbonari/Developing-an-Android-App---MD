@@ -1,6 +1,13 @@
 package com.example.fitsync.home
 
+import android.Manifest
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.filled.*
@@ -26,7 +33,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import java.time.DayOfWeek
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
+import com.example.fitsync.steps.StepCounterService
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -41,8 +53,10 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
     val date = LocalDate.now()
     val dateFormatter = DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL)
 
+    val scrollState = rememberScrollState()
+
     Column(
-        modifier = Modifier.padding(16.dp)
+        modifier = Modifier.padding(16.dp).verticalScroll(scrollState)
     ) {
         // Header
         Text(
@@ -73,19 +87,18 @@ fun HomeScreen(homeViewModel: HomeViewModel) {
                 .padding(16.dp)
                 .fillMaxWidth(), Arrangement.SpaceBetween) {
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    Text("Bonus Points", style = MaterialTheme.typography.titleMedium)
+                    Text("One step at a time", style = MaterialTheme.typography.titleMedium)
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text("Write Gratitude", style = MaterialTheme.typography.bodyLarge)
+                    Text("With Gratitude", style = MaterialTheme.typography.bodyLarge)
 
                 }
                 Column(modifier = Modifier.padding(vertical = 8.dp)) {
-                    Button(onClick = { }) {
-                        Text("Write Now")
-                    }
+                    StartStopStepCounterButton()
                 }
             }
 
         }
+
     }
 }
 
@@ -100,7 +113,7 @@ fun ActivityCard(stepsFlow: StateFlow<Int>){
     val steps by stepsFlow.collectAsState()
 
     val goal = 1200
-    val averageStepLengthMeters = 175 * 0.415 / 100
+    val averageStepLengthMeters = 175 * 0.4 / 100
 
     val distance = steps * averageStepLengthMeters / 1000 // Convert to kilometers
     val calories = steps * 0.04 // 0.04 kcal per step
@@ -124,7 +137,7 @@ fun ActivityCard(stepsFlow: StateFlow<Int>){
 
                 Text("$steps/$goal Steps", style = MaterialTheme.typography.bodyLarge)
                 Text("${String.format("%.2f", distance)} Km Distance", style = MaterialTheme.typography.bodyLarge)
-                Text("$calories Kcal", style = MaterialTheme.typography.bodyLarge)
+                Text("${String.format("%.2f", calories)} Kcal", style = MaterialTheme.typography.bodyLarge)
             }
 
             CustomCircularProgressIndicator(
@@ -254,4 +267,69 @@ fun CustomCircularProgressIndicator(
         )
     }
 
+}
+
+@Composable
+fun StartStopStepCounterButton() {
+    var isServiceRunning by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    // Prepare the permission launcher
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission granted, start or stop the service
+                toggleStepCounterService(context, isServiceRunning).also {
+                    isServiceRunning = it
+                }
+            } else {
+                // Permission denied, handle the denial
+                Toast.makeText(context, "Permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+    Button(onClick = {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            // For Android 10 and above, check and request permission
+            if (ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.ACTIVITY_RECOGNITION
+                ) == PackageManager.PERMISSION_GRANTED
+            ) {
+                // Permission already granted
+                toggleStepCounterService(context, isServiceRunning).also {
+                    isServiceRunning = it
+                }
+            } else {
+                // Request permission
+                permissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+            }
+        } else {
+            // For below Android 10, permission is not needed
+            toggleStepCounterService(context, isServiceRunning).also {
+                isServiceRunning = it
+            }
+        }
+    }) {
+        Text(if (isServiceRunning) "Stop Counter" else "Start Counter")
+    }
+}
+
+private fun toggleStepCounterService(context: Context, isServiceRunning: Boolean): Boolean {
+    val serviceIntent = Intent(context, StepCounterService::class.java)
+    return if (isServiceRunning) {
+        // Stop the service
+        context.stopService(serviceIntent)
+        false
+    } else {
+        // Start the service
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(serviceIntent)
+        } else {
+            context.startService(serviceIntent)
+        }
+        true
+    }
 }
